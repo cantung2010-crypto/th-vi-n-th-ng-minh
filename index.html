@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THƯ VIỆN THÔNG MINH — Cấn Việt Tùng & Tạ Ngọc Diệp 11A1</title>
+  <meta name="description" content="Thư viện thông minh - demo web hiển thị sách, tìm kiếm, lọc và xem chi tiết. Dự án KHKT của Cấn Việt Tùng & Tạ Ngọc Diệp 11A1">
+  <!-- Tailwind CSS (CDN cho demo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="bg-gradient-to-b from-white via-slate-50 to-[#F8FAFC] text-gray-900 min-h-screen">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-200 px-4 py-3 shadow-sm">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-rose-600 text-white flex items-center justify-center font-bold text-xl shadow-md">
+          📚
+        </div>
+        <div>
+          <h1 class="font-extrabold text-sm sm:text-base text-gray-950">THƯ VIỆN THÔNG MINH</h1>
+          <p class="text-[12px] text-gray-500">Dự án KHKT — Cấn Việt Tùng &amp; Tạ Ngọc Diệp 11A1</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <nav class="hidden sm:flex items-center gap-2 text-sm text-gray-600">
+          <a href="#books" class="hover:underline">Danh mục</a>
+          <a href="#" class="hover:underline">Về dự án</a>
+        </nav>
+        <div id="statusIndicator" class="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">● Trực tuyến</div>
+      </div>
+    </div>
+  </header>
 
+  <!-- Main -->
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <!-- Search & Filters -->
+    <section class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+      <div class="flex flex-col sm:flex-row items-center gap-4">
+        <div class="flex-1 w-full">
+          <label for="searchInput" class="sr-only">Tìm sách</label>
+          <div class="relative">
+            <input id="searchInput" type="text" placeholder="Nhập tên sách, tác giả hoặc mã ISBN..." class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+            <button id="clearSearch" class="absolute right-2 top-2/4 -translate-y-2/4 text-sm px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200">Xóa</button>
+          </div>
+        </div>
+
+        <div id="categories" class="flex gap-2 items-center overflow-x-auto">
+          <button data-cat="all" class="cat-btn px-3 py-2 rounded-xl text-xs font-bold bg-gray-900 text-white">Tất cả</button>
+          <button data-cat="Văn học" class="cat-btn px-3 py-2 rounded-xl text-xs font-bold bg-gray-100 text-gray-700">Văn học</button>
+          <button data-cat="Khoa học" class="cat-btn px-3 py-2 rounded-xl text-xs font-bold bg-gray-100 text-gray-700">Khoa học</button>
+          <button data-cat="Công nghệ" class="cat-btn px-3 py-2 rounded-xl text-xs font-bold bg-gray-100 text-gray-700">Công nghệ</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Books grid -->
+    <section id="books" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-bold text-gray-900">Danh mục tác phẩm</h2>
+        <span id="bookCount" class="text-sm text-gray-500">Đang tải...</span>
+      </div>
+
+      <div id="booksGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+    </section>
+
+    <footer class="text-center text-xs text-gray-500 py-6">
+      © 2026 Thư viện thông minh — Cấn Việt Tùng &amp; Tạ Ngọc Diệp. Demo mã nguồn.
+    </footer>
+  </main>
+
+  <!-- Modal -->
+  <div id="detailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+    <div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl border border-gray-200">
+      <div class="px-5 py-3.5 border-b bg-gray-50 flex items-center justify-between">
+        <span id="modalCategory" class="text-xs font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full"></span>
+        <button id="closeModalBtn" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center" aria-label="Đóng">✕</button>
+      </div>
+      <div class="p-5 overflow-y-auto space-y-4">
+        <div class="flex flex-col sm:flex-row gap-4 items-start">
+          <img id="modalCover" class="w-36 aspect-[3/4] object-cover rounded-xl border shadow-sm mx-auto sm:mx-0" src="" alt="Bìa sách" loading="lazy" />
+          <div class="flex-1">
+            <h3 id="modalTitle" class="text-xl font-black text-gray-900"></h3>
+            <p id="modalAuthor" class="font-semibold text-gray-600 mt-1"></p>
+            <p id="modalIsbn" class="font-mono text-gray-400 text-[12px] mt-1"></p>
+            <div class="mt-3 p-3 bg-orange-50 rounded-xl border border-orange-100">
+              <strong class="text-orange-900">Thông điệp cốt lõi:</strong>
+              <p id="modalMessage" class="italic text-gray-800 mt-1"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t pt-3">
+          <h4 class="font-bold text-gray-900">Tóm tắt nội dung:</h4>
+          <p id="modalSummary" class="text-gray-600 mt-1"></p>
+        </div>
+
+        <div class="border-t pt-3">
+          <h4 class="font-bold text-gray-900">Bài học đúc kết:</h4>
+          <div id="modalTakeaways" class="mt-2 space-y-2 text-gray-700"></div>
+        </div>
+
+        <div class="border-t pt-3">
+          <h4 class="font-bold text-gray-900">Hỏi đáp &amp; Tra cứu:</h4>
+          <div id="chatBox" class="p-3 bg-gray-50 rounded-xl border mt-2 max-h-40 overflow-y-auto"></div>
+          <div class="flex gap-2 mt-3">
+            <input id="questionInput" type="text" placeholder="Nhập câu hỏi..." class="flex-1 px-3 py-2 rounded-xl border text-sm" />
+            <button id="askBtn" class="px-4 py-2 bg-gray-900 text-white rounded-xl">Tra cứu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
